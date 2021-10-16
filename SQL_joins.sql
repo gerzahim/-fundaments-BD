@@ -59,44 +59,59 @@ INNER JOIN posts
 +--------+----------+--------+------------------------------------------+
 | userID | nickname | postID | post_titulo                              |
 +--------+----------+--------+------------------------------------------+
-|      4 | Ed       |     46 | Los mejores vestidos en la alfombra roja | TIENE POST y TIENE USUARIO
-|      4 | Ed       |     47 | Los paparatzi captan escndalo en cmara   | TIENE POST y TIENE USUARIO
-|      4 | Ed       |     57 | Escndalo con el boxeador del momento     | TIENE POST y TIENE USUARIO
-|      4 | Ed       |     61 | Escndalo en el mundo de la moda          | TIENE POST y TIENE USUARIO
-+--------+----------+--------+------------------------------------------+
-
-
-
--- OUTER JOIN
--- traer todos los usuarios y posts que (TENGAN o NO TENGAN) relacion entre ellos 
-SELECT * 
-FROM usuarios
-FULL OUTER JOIN posts
- ON posts.usuario_id = usuarios.id
-+--------+----------+--------+------------------------------------------+
-| userID | nickname | postID | post_titulo                              |
-+--------+----------+--------+------------------------------------------+
-|      5 | Oso Prez |   NULL | NULL                                     | NO TIENE POST
+|      4 | Ed       |     46 | Los mejores vestidos en la alfombra roja | TIENE POST
 |      4 | Ed       |     47 | Los paparatzi captan escndalo en cmara   | TIENE POST
 |      4 | Ed       |     57 | Escndalo con el boxeador del momento     | TIENE POST
-|   NULL | NULL     |     34 | mariposa de la moda                      | NO TIENE USUARIO
+|      4 | Ed       |     61 | Escndalo en el mundo de la moda          | TIENE POST
 +--------+----------+--------+------------------------------------------+
+
 
 
 -- OUTER JOIN
--- traer todos los usuarios y posts que (NO TENGAN) relacion entre ellos 
-SELECT * 
+-- traer todos los usuarios y post que (TENGAN o NO TENGAN) relacion entre ellos 
+SELECT *
 FROM usuarios
-FULL OUTER JOIN posts
+LEFT JOIN posts
  ON posts.usuario_id = usuarios.id
-WHERE posts.usuario_id IS NULL 
-OR usuarios.id IS NULL 
+UNION
+SELECT *
+FROM usuarios
+RIGHT JOIN posts
+ ON posts.usuario_id = usuarios.id;
 +--------+----------+--------+------------------------------------------+
 | userID | nickname | postID | post_titulo                              |
 +--------+----------+--------+------------------------------------------+
+|      4 | Ed       |     46 | Los mejores vestidos en la alfombra roja |
+|      4 | Ed       |     47 | Los paparatzi captan escndalo en cmara   |
+|      4 | Ed       |     57 | Escndalo con el boxeador del momento     |
+|      4 | Ed       |     61 | Escndalo en el mundo de la moda          |
 |      5 | Oso Prez |   NULL | NULL                                     | NO TIENE POST
-|   NULL | NULL     |     34 | mariposa de la moda                      | NO TIENE USUARIO
+|   NULL | NULL     |     64 | El post que se qued hurfano              | NO TIENE USUARIO
 +--------+----------+--------+------------------------------------------+
+
+
+
+
+-- OUTER JOIN
+-- traer todos los usuarios y post que NO(TENGAN) relacion entre ellos 
+SELECT *
+FROM usuarios
+LEFT JOIN posts
+ ON posts.usuario_id = usuarios.id
+ WHERE posts.usuario_id IS NULL 
+UNION
+SELECT *
+FROM usuarios
+RIGHT JOIN posts
+ ON posts.usuario_id = usuarios.id
+ WHERE posts.usuario_id IS NULL;
+
+ +--------+----------+--------+-----------------------------+
+| userID | nickname | postID | post_titulo                 |
++--------+----------+--------+-----------------------------+
+|      5 | Oso Prez |   NULL | NULL                        | NO TIENE POST
+|   NULL | NULL     |     64 | El post que se qued hurfano | NO TIENE USUARIO
++--------+----------+--------+-----------------------------+
 
 
 
